@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fum Swim KKGO Lembang</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0d1322;
+            color: #ffffff;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .card-bg {
+            background-color: #172138;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .card-bg-light {
+            background-color: #1f2c4a;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Top Header Navigation -->
+    <header class="flex justify-between items-center px-4 py-4 border-b border-gray-800 bg-[#0d1322]/80 backdrop-blur sticky top-0 z-40">
+        <div class="flex items-center space-x-2">
+            <span class="font-bold text-lg tracking-wider text-blue-400">FUM SWIM KKGO LEMBANG</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- Book Icon for PDF Results -->
+            <button onclick="openPdfModal()" class="w-10 h-10 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white shadow-lg transition" title="Hasil Lomba PDF">
+                <i class="fa-solid fa-book-open"></i>
+            </button>
+            <!-- Gear Icon for Roles / Settings -->
+            <button onclick="openRoleModal()" class="w-10 h-10 rounded-xl bg-[#172138] hover:bg-[#253558] flex items-center justify-center text-blue-400 border border-gray-700 shadow-lg transition" title="Pilih Akses">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Public Display View -->
+    <main class="flex-grow p-4 max-w-md mx-auto w-full space-y-6">
+        
+        <!-- Header Info Live / Update Time -->
+        <div class="flex justify-between items-center text-xs text-gray-400 px-1">
+            <div class="flex items-center space-x-1.5">
+                <i class="fa-solid fa-bullhorn text-blue-400"></i>
+                <span class="uppercase font-semibold tracking-wider text-gray-300">Pemanggilan</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <i class="fa-regular fa-clock"></i>
+                <span>TERAKHIR UPDATE <span id="last-update-time">--:--:--</span> WIB</span>
+            </div>
+        </div>
+
+        <!-- Call Room Display Card -->
+        <div class="card-bg rounded-2xl p-5 shadow-xl space-y-4">
+            <div class="grid grid-cols-2 gap-3 text-center">
+                <div class="card-bg-light rounded-xl p-3">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Acara</div>
+                    <div id="display-call-acara" class="text-4xl font-extrabold text-white">--</div>
+                </div>
+                <div class="card-bg-light rounded-xl p-3">
+                    <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Seri</div>
+                    <div id="display-call-seri" class="text-4xl font-extrabold text-white">--</div>
+                </div>
+            </div>
+
+            <!-- Race Name / Category -->
+            <div id="display-race-name" class="text-center font-bold text-sm tracking-wide text-blue-300 uppercase py-2 border-t border-b border-gray-800">
+                Belum ada nomor acara aktif
+            </div>
+
+            <!-- In The Next / Ready To Race Status Tags -->
+            <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between bg-[#111827] px-3 py-2 rounded-lg border border-gray-800 text-xs">
+                    <span class="text-gray-400 font-medium">IN THE NEXT</span>
+                    <div class="space-x-1">
+                        <span class="bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded font-semibold" id="display-next-ev">EV --</span>
+                        <span class="bg-gray-800 text-gray-300 px-2 py-0.5 rounded font-semibold" id="display-next-ht">HT --</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between bg-[#111827] px-3 py-2 rounded-lg border border-gray-800 text-xs">
+                    <span class="text-amber-400/90 font-medium">READY TO RACE</span>
+                    <div class="space-x-1">
+                        <span class="bg-amber-950/60 text-amber-300 px-2 py-0.5 rounded font-semibold" id="display-ready-ev">EV --</span>
+                        <span class="bg-gray-800 text-gray-300 px-2 py-0.5 rounded font-semibold" id="display-ready-ht">HT --</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sedang Berlomba Section -->
+        <div class="space-y-3 pt-2">
+            <div class="flex justify-between items-center px-1">
+                <div class="flex items-center space-x-2">
+                    <div class="text-red-500 text-base"><i class="fa-solid fa-tv"></i></div>
+                    <span class="font-bold text-base text-white">Sedang Berlomba</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-1 text-xs text-gray-400">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="current-clock">--:--:--</span>
+                    </div>
+                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">LIVE</span>
+                </div>
+            </div>
+
+            <!-- Racing Now Display Card -->
+            <div class="card-bg rounded-2xl p-5 shadow-xl">
+                <div class="grid grid-cols-2 gap-3 text-center">
+                    <div class="card-bg-light rounded-xl p-3">
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Acara</div>
+                        <div id="display-live-acara" class="text-4xl font-extrabold text-white">--</div>
+                    </div>
+                    <div class="card-bg-light rounded-xl p-3">
+                        <div class="text-xs text-gray-400 uppercase tracking-wider mb-1">Seri</div>
+                        <div id="display-live-seri" class="text-4xl font-extrabold text-white">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 text-xs text-gray-500 border-t border-gray-900">
+        &copy; 2026 Fum Swim KKGO Lembang. All rights reserved.
+    </footer>
+
+    <!-- Role Selection Modal (Gerigi Icon) -->
+    <div id="role-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="card-bg rounded-2xl max-w-sm w-full p-6 space-y-5 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-gear text-blue-400"></i>
+                    <span>Pilih Akses Menu</span>
+                </h3>
+                <button onclick="closeRoleModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-3">
+                <button onclick="selectRole('admin')" class="w-full flex items-center space-x-4 p-4 rounded-xl card-bg-light hover:bg-blue-900/40 border border-gray-700 transition text-left group">
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition"><i class="fa-solid fa-user-shield"></i></div>
+                    <div>
+                        <div class="font-bold text-white">Admin Lomba</div>
+                        <div class="text-xs text-gray-400">Upload file hasil perlombaan PDF</div>
+                    </div>
+                </button>
+
+                <button onclick="selectRole('announcer')" class="w-full flex items-center space-x-4 p-4 rounded-xl card-bg-light hover:bg-purple-900/40 border border-gray-700 transition text-left group">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg group-hover:scale-110 transition"><i class="fa-solid fa-microphone"></i></div>
+                    <div>
+                        <div class="font-bold text-white">Announcer</div>
+                        <div class="text-xs text-gray-400">Kelola nomor event & acara berlangsung</div>
+                    </div>
+                </button>
+
+                <button onclick="selectRole('callroom')" class="w-full flex items-center space-x-4 p-4 rounded-xl card-bg-light hover:bg-emerald-900/40 border border-gray-700 transition text-left group">
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <div class="font-bold text-white">Call Room</div>
+                        <div class="text-xs text-gray-400">Kelola pemanggilan atlet & antrean berikutnya</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Lomba Modal -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="card-bg rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-user-shield text-blue-400"></i>
+                    <span>Panel Admin Lomba</span>
+                </h3>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-gray-300 mb-1 font-medium">Judul / Nama Hasil Lomba (PDF)</label>
+                    <input type="text" id="pdf-title-input" placeholder="Contoh: Hasil Akhir Hari ke-1 / Session 2" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1 font-medium">Pilih File PDF</label>
+                    <input type="file" id="pdf-file-input" accept=".pdf" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer">
+                </div>
+                <button onclick="uploadPdf()" class="w-full py-3 bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition shadow-lg text-white">Upload File PDF</button>
+                
+                <div class="pt-2">
+                    <div class="text-xs font-semibold text-gray-400 mb-2 uppercase tracking-wider">Daftar File PDF Terupload:</div>
+                    <div id="admin-pdf-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                        <!-- Dynamic list -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Announcer Modal -->
+    <div id="announcer-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="card-bg rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-microphone text-purple-400"></i>
+                    <span>Panel Announcer (Sedang Berlomba)</span>
+                </h3>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-4 text-sm">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Nomor Acara</label>
+                        <input type="number" id="ann-acara" placeholder="64" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Nomor Seri</label>
+                        <input type="number" id="ann-seri" placeholder="1" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-300 mb-1 font-medium">Nama/Deskripsi Perlombaan</label>
+                    <input type="text" id="ann-racename" placeholder="BOYS 13 & OVER 50 FREESTYLE" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <button onclick="saveAnnouncer()" class="w-full py-3 bg-purple-600 hover:bg-purple-500 font-bold rounded-xl transition shadow-lg text-white">Update Status Live</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call Room Modal -->
+    <div id="callroom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="card-bg rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-users text-emerald-400"></i>
+                    <span>Panel Call Room</span>
+                </h3>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-4 text-sm">
+                <div class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Pemanggilan Utama (Aktif)</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Acara</label>
+                        <input type="number" id="cr-acara" placeholder="65" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Seri</label>
+                        <input type="number" id="cr-seri" placeholder="1" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-3 text-xs text-gray-400 font-semibold uppercase tracking-wider">In The Next (Berikutnya)</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Next Acara (EV)</label>
+                        <input type="number" id="cr-next-ev" placeholder="64" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Next Seri (HT)</label>
+                        <input type="number" id="cr-next-ht" placeholder="3" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-800 pt-3 text-xs text-gray-400 font-semibold uppercase tracking-wider">Ready To Race (Siap Lomba)</div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Ready Acara (EV)</label>
+                        <input type="number" id="cr-ready-ev" placeholder="64" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-1 font-medium">Ready Seri (HT)</label>
+                        <input type="number" id="cr-ready-ht" placeholder="2" class="w-full bg-[#111827] border border-gray-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+
+                <button onclick="saveCallRoom()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition shadow-lg text-white">Update Call Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Results Modal (Book Icon) -->
+    <div id="pdf-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="card-bg rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-gray-700">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open text-blue-400"></i>
+                    <span>Hasil Lomba (PDF)</span>
+                </h3>
+                <button onclick="closeModals()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="text-xs text-gray-400">Berikut adalah daftar file hasil perlombaan yang diunggah oleh admin:</div>
+                <div id="public-pdf-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    <!-- Dynamic PDF list -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactivity & LocalStorage Persistence -->
+    <script>
+        let appData = JSON.parse(localStorage.getItem('fum_swim_data')) || {
+            callAcara: '65',
+            callSeri: '1',
+            raceName: 'BOYS 13 & OVER 50 FREESTYLE',
+            nextEv: '64',
+            nextHt: '3',
+            readyEv: '64',
+            readyHt: '2',
+            liveAcara: '64',
+            liveSeri: '1',
+            lastUpdate: '16.15.22',
+            pdfList: [
+                { title: 'Hasil Lomba Sesi 1 - Penyisihan', dataUrl: '#', date: '08:30 WIB' },
+                { title: 'Hasil Lomba Sesi 2 - Final', dataUrl: '#', date: '14:15 WIB' }
+            ]
+        };
+
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0].replace(/:/g, '.');
+            document.getElementById('current-clock').innerText = timeString + ' WIB';
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function renderUI() {
+            document.getElementById('display-call-acara').innerText = appData.callAcara;
+            document.getElementById('display-call-seri').innerText = appData.callSeri;
+            document.getElementById('display-race-name').innerText = appData.raceName || 'Belum ada nomor acara aktif';
+            document.getElementById('display-next-ev').innerText = 'EV ' + appData.nextEv;
+            document.getElementById('display-next-ht').innerText = 'HT ' + appData.nextHt;
+            document.getElementById('display-ready-ev').innerText = 'EV ' + appData.readyEv;
+            document.getElementById('display-ready-ht').innerText = 'HT ' + appData.readyHt;
+            document.getElementById('display-live-acara').innerText = appData.liveAcara;
+            document.getElementById('display-live-seri').innerText = appData.liveSeri;
+            document.getElementById('last-update-time').innerText = appData.lastUpdate;
+
+            let adminHtml = '';
+            let publicHtml = '';
+            if (appData.pdfList.length === 0) {
+                adminHtml = '<div class="text-xs text-gray-500 italic">Belum ada file PDF.</div>';
+                publicHtml = '<div class="text-xs text-gray-500 italic text-center py-4">Belum ada file hasil lomba PDF yang diunggah.</div>';
+            } else {
+                appData.pdfList.forEach((item, index) => {
+                    adminHtml += `
+                        <div class="flex justify-between items-center bg-[#111827] p-2.5 rounded-xl border border-gray-800 text-xs">
+                            <div class="truncate pr-2">
+                                <div class="font-semibold text-white truncate">${item.title}</div>
+                                <div class="text-[10px] text-gray-400">${item.date}</div>
+                            </div>
+                            <button onclick="deletePdf(${index})" class="text-red-400 hover:text-red-300 px-2 py-1"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    publicHtml += `
+                        <a href="${item.dataUrl}" target="_blank" class="flex items-center justify-between bg-[#111827] hover:bg-[#1f2c4a] p-3 rounded-xl border border-gray-800 transition group">
+                            <div class="flex items-center space-x-3 truncate pr-2">
+                                <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-file-pdf"></i></div>
+                                <div class="truncate">
+                                    <div class="font-semibold text-white text-xs group-hover:text-blue-300 truncate">${item.title}</div>
+                                    <div class="text-[10px] text-gray-400">Upload: ${item.date}</div>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-download text-gray-500 text-xs"></i>
+                        </a>
+                    `;
+                });
+            }
+            document.getElementById('admin-pdf-list').innerHTML = adminHtml;
+            document.getElementById('public-pdf-list').innerHTML = publicHtml;
+        }
+
+        function saveData() {
+            const now = new Date();
+            appData.lastUpdate = now.toTimeString().split(' ')[0].replace(/:/g, '.');
+            localStorage.setItem('fum_swim_data', JSON.stringify(appData));
+            renderUI();
+        }
+
+        function openRoleModal() { document.getElementById('role-modal').classList.remove('hidden'); }
+        function closeRoleModal() { document.getElementById('role-modal').classList.add('hidden'); }
+        function openPdfModal() { renderUI(); document.getElementById('pdf-modal').classList.remove('hidden'); }
+        function closeModals() {
+            document.getElementById('role-modal').classList.add('hidden');
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.getElementById('announcer-modal').classList.add('hidden');
+            document.getElementById('callroom-modal').classList.add('hidden');
+            document.getElementById('pdf-modal').classList.add('hidden');
+        }
+
+        function selectRole(role) {
+            closeRoleModal();
+            if (role === 'admin') {
+                document.getElementById('admin-modal').classList.remove('hidden');
+            } else if (role === 'announcer') {
+                document.getElementById('ann-acara').value = appData.liveAcara;
+                document.getElementById('ann-seri').value = appData.liveSeri;
+                document.getElementById('ann-racename').value = appData.raceName;
+                document.getElementById('announcer-modal').classList.remove('hidden');
+            } else if (role === 'callroom') {
+                document.getElementById('cr-acara').value = appData.callAcara;
+                document.getElementById('cr-seri').value = appData.callSeri;
+                document.getElementById('cr-next-ev').value = appData.nextEv;
+                document.getElementById('cr-next-ht').value = appData.nextHt;
+                document.getElementById('cr-ready-ev').value = appData.readyEv;
+                document.getElementById('cr-ready-ht').value = appData.readyHt;
+                document.getElementById('callroom-modal').classList.remove('hidden');
+            }
+        }
+
+        function saveAnnouncer() {
+            const ac = document.getElementById('ann-acara').value;
+            const sr = document.getElementById('ann-seri').value;
+            const rn = document.getElementById('ann-racename').value;
+            if(ac) appData.liveAcara = ac;
+            if(sr) appData.liveSeri = sr;
+            if(rn) appData.raceName = rn;
+            saveData();
+            closeModals();
+            alert('Status Sedang Berlomba berhasil diperbarui!');
+        }
+
+        function saveCallRoom() {
+            const ca = document.getElementById('cr-acara').value;
+            const cs = document.getElementById('cr-seri').value;
+            const nev = document.getElementById('cr-next-ev').value;
+            const nht = document.getElementById('cr-next-ht').value;
+            const rev = document.getElementById('cr-ready-ev').value;
+            const rht = document.getElementById('cr-ready-ht').value;
+
+            if(ca) appData.callAcara = ca;
+            if(cs) appData.callSeri = cs;
+            if(nev) appData.nextEv = nev;
+            if(nht) appData.nextHt = nht;
+            if(rev) appData.readyEv = rev;
+            if(rht) appData.readyHt = rht;
+
+            saveData();
+            closeModals();
+            alert('Data Call Room berhasil diperbarui!');
+        }
+
+        function uploadPdf() {
+            const titleInput = document.getElementById('pdf-title-input');
+            const fileInput = document.getElementById('pdf-file-input');
+            const title = titleInput.value.trim() || (fileInput.files[0] ? fileInput.files[0].name : 'Hasil Lomba PDF');
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const now = new Date();
+                    const timeStr = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0') + ' WIB';
+                    appData.pdfList.unshift({
+                        title: title,
+                        dataUrl: e.target.result,
+                        date: timeStr
+                    });
+                    saveData();
+                    titleInput.value = '';
+                    fileInput.value = '';
+                    alert('File PDF berhasil diunggah!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                alert('Silakan pilih file PDF terlebih dahulu.');
+            }
+        }
+
+        function deletePdf(index) {
+            if (confirm('Hapus file hasil lomba ini?')) {
+                appData.pdfList.splice(index, 1);
+                saveData();
+            }
+        }
+
+        renderUI();
+    </script>
+</body>
+</html>
