@@ -154,7 +154,7 @@
                     <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-lg group-hover:scale-110 transition"><i class="fa-solid fa-user-shield"></i></div>
                     <div>
                         <div class="font-bold text-gray-800">Admin Lomba</div>
-                        <div class="text-xs text-gray-500">Upload hingga 24 file hasil PDF</div>
+                        <div class="text-xs text-gray-500">Upload hingga 74 file hasil PDF</div>
                     </div>
                 </button>
 
@@ -203,7 +203,7 @@
             <div class="flex justify-between items-center border-b border-gray-200 pb-3">
                 <h3 class="font-bold text-lg text-gray-800 flex items-center space-x-2">
                     <i class="fa-solid fa-user-shield text-blue-600"></i>
-                    <span>Panel Admin Lomba (Maks. 24 File)</span>
+                    <span>Panel Admin Lomba (Maks. 74 File)</span>
                 </h3>
                 <button onclick="closeModals()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
@@ -220,7 +220,7 @@
                 <button onclick="uploadPdf()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 font-bold rounded-xl transition shadow-md text-white">Upload File PDF</button>
                 
                 <div class="pt-2">
-                    <div class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Daftar File PDF Terupload (<span id="pdf-count">0</span>/24):</div>
+                    <div class="text-xs font-semibold text-gray-500 mb-2 uppercase tracking-wider">Daftar File PDF Terupload (<span id="pdf-count">0</span>/74):</div>
                     <div id="admin-pdf-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
                         <!-- Dynamic list -->
                     </div>
@@ -376,7 +376,7 @@
             let publicHtml = '';
             if (appData.pdfList.length === 0) {
                 adminHtml = '<div class="text-xs text-gray-400 italic">Belum ada file PDF yang diunggah.</div>';
-                publicHtml = '<div class="text-xs text-red-500 font-bold text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">Hasil Belum Tersedia</div>';
+                publicHtml = '<div class="text-xs text-red-500 font-bold text-center py-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">(Hasil Belum Tersedia)</div>';
             } else {
                 appData.pdfList.forEach((item, index) => {
                     adminHtml += `
@@ -495,8 +495,8 @@
         }
 
         function uploadPdf() {
-            if (appData.pdfList.length >= 24) {
-                alert('Batas maksimal 24 file PDF telah tercapai.');
+            if (appData.pdfList.length >= 74) {
+                alert('Batas maksimal 74 file PDF telah tercapai.');
                 return;
             }
 
