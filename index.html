@@ -26,6 +26,12 @@
             background-color: #f1f5f9;
             border: 1px solid #e2e8f0;
         }
+        /* Hilangkan panah default number input di beberapa browser */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -80,21 +86,13 @@
                 Belum ada nomor acara aktif
             </div>
 
-            <!-- In The Next / Ready To Race Status Tags -->
+            <!-- In The Next Status Tag -->
             <div class="space-y-2 pt-1">
                 <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 text-xs">
                     <span class="text-gray-600 font-medium">IN THE NEXT</span>
                     <div class="space-x-1">
                         <span class="bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-semibold" id="display-next-ev">EV --</span>
                         <span class="bg-gray-200 text-gray-700 px-2 py-0.5 rounded font-semibold" id="display-next-ht">HT --</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 text-xs">
-                    <span class="text-amber-600 font-medium">READY TO RACE</span>
-                    <div class="space-x-1">
-                        <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold" id="display-ready-ev">EV --</span>
-                        <span class="bg-gray-200 text-gray-700 px-2 py-0.5 rounded font-semibold" id="display-ready-ht">HT --</span>
                     </div>
                 </div>
             </div>
@@ -244,11 +242,23 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Nomor Acara</label>
-                        <input type="number" id="ann-acara" placeholder="64" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-500">
+                        <div class="flex items-center">
+                            <input type="number" id="ann-acara" placeholder="64" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('ann-acara', 1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('ann-acara', -1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Nomor Seri</label>
-                        <input type="number" id="ann-seri" placeholder="1" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-500">
+                        <div class="flex items-center">
+                            <input type="number" id="ann-seri" placeholder="1" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-purple-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('ann-seri', 1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('ann-seri', -1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -276,11 +286,23 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Acara</label>
-                        <input type="number" id="cr-acara" placeholder="65" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                        <div class="flex items-center">
+                            <input type="number" id="cr-acara" oninput="autoUpdateNext()" placeholder="65" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('cr-acara', 1); autoUpdateNext();" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('cr-acara', -1); autoUpdateNext();" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Seri</label>
-                        <input type="number" id="cr-seri" placeholder="1" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                        <div class="flex items-center">
+                            <input type="number" id="cr-seri" placeholder="1" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('cr-seri', 1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('cr-seri', -1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -288,23 +310,23 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Next Acara (EV)</label>
-                        <input type="number" id="cr-next-ev" placeholder="64" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                        <div class="flex items-center">
+                            <input type="number" id="cr-next-ev" placeholder="64" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('cr-next-ev', 1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('cr-next-ev', -1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-gray-600 mb-1 font-medium">Next Seri (HT)</label>
-                        <input type="number" id="cr-next-ht" placeholder="3" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-200 pt-3 text-xs text-gray-500 font-semibold uppercase tracking-wider">Ready To Race (Siap Lomba)</div>
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-gray-600 mb-1 font-medium">Ready Acara (EV)</label>
-                        <input type="number" id="cr-ready-ev" placeholder="64" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-gray-600 mb-1 font-medium">Ready Seri (HT)</label>
-                        <input type="number" id="cr-ready-ht" placeholder="2" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                        <div class="flex items-center">
+                            <input type="number" id="cr-next-ht" placeholder="3" class="w-full bg-gray-50 border border-gray-300 rounded-l-xl px-3 py-2 text-gray-800 focus:outline-none focus:border-emerald-500">
+                            <div class="flex flex-col border border-l-0 border-gray-300 bg-gray-100 rounded-r-xl">
+                                <button type="button" onclick="adjustValue('cr-next-ht', 1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-tr-xl"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button type="button" onclick="adjustValue('cr-next-ht', -1)" class="px-2 py-0.5 text-xs text-gray-700 hover:bg-gray-200 rounded-br-xl"><i class="fa-solid fa-chevron-down"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -339,10 +361,8 @@
             callAcara: '65',
             callSeri: '1',
             raceName: 'BOYS 13 & OVER 50 FREESTYLE',
-            nextEv: '64',
-            nextHt: '3',
-            readyEv: '64',
-            readyHt: '2',
+            nextEv: '66',
+            nextHt: '1',
             liveAcara: '64',
             liveSeri: '1',
             lastUpdate: '16.15.22',
@@ -365,8 +385,6 @@
             document.getElementById('display-race-name').innerText = appData.raceName || 'Belum ada nomor acara aktif';
             document.getElementById('display-next-ev').innerText = 'EV ' + appData.nextEv;
             document.getElementById('display-next-ht').innerText = 'HT ' + appData.nextHt;
-            document.getElementById('display-ready-ev').innerText = 'EV ' + appData.readyEv;
-            document.getElementById('display-ready-ht').innerText = 'HT ' + appData.readyHt;
             document.getElementById('display-live-acara').innerText = appData.liveAcara;
             document.getElementById('display-live-seri').innerText = appData.liveSeri;
             document.getElementById('last-update-time').innerText = appData.lastUpdate;
@@ -443,8 +461,6 @@
                     document.getElementById('cr-seri').value = appData.callSeri;
                     document.getElementById('cr-next-ev').value = appData.nextEv;
                     document.getElementById('cr-next-ht').value = appData.nextHt;
-                    document.getElementById('cr-ready-ev').value = appData.readyEv;
-                    document.getElementById('cr-ready-ht').value = appData.readyHt;
                     document.getElementById('callroom-modal').classList.remove('hidden');
                 }
             } else {
@@ -462,6 +478,21 @@
             document.getElementById('pdf-modal').classList.add('hidden');
         }
 
+        // Fungsi penambah/pengurang nomor via tombol panah
+        function adjustValue(elementId, amount) {
+            const input = document.getElementById(elementId);
+            let val = parseInt(input.value) || 0;
+            val += amount;
+            if (val < 0) val = 0;
+            input.value = val;
+        }
+
+        // Otomatis update In The Next mengikuti Pemanggilan Utama + 1
+        function autoUpdateNext() {
+            const crAcara = parseInt(document.getElementById('cr-acara').value) || 0;
+            document.getElementById('cr-next-ev').value = crAcara + 1;
+        }
+
         function saveAnnouncer() {
             const ac = document.getElementById('ann-acara').value;
             const sr = document.getElementById('ann-seri').value;
@@ -470,8 +501,8 @@
             if(sr) appData.liveSeri = sr;
             if(rn) appData.raceName = rn;
             saveData();
-            closeModals();
             alert('Status Sedang Berlomba berhasil diperbarui!');
+            // Panel tetap terbuka agar bisa lanjut update berikutnya
         }
 
         function saveCallRoom() {
@@ -479,19 +510,15 @@
             const cs = document.getElementById('cr-seri').value;
             const nev = document.getElementById('cr-next-ev').value;
             const nht = document.getElementById('cr-next-ht').value;
-            const rev = document.getElementById('cr-ready-ev').value;
-            const rht = document.getElementById('cr-ready-ht').value;
 
             if(ca) appData.callAcara = ca;
             if(cs) appData.callSeri = cs;
             if(nev) appData.nextEv = nev;
             if(nht) appData.nextHt = nht;
-            if(rev) appData.readyEv = rev;
-            if(rht) appData.readyHt = rht;
 
             saveData();
-            closeModals();
             alert('Data Call Room berhasil diperbarui!');
+            // Panel tetap terbuka agar bisa lanjut update berikutnya
         }
 
         function uploadPdf() {
